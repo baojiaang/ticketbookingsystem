@@ -45,6 +45,19 @@ public class UserInfo implements Serializable {
     @Column(name = "NAME")
     private String name;
 
+    public UserInfo(String username, String password, String name) {
+        this.username = username;
+        this.password = password;
+        this.name = name;
+    }
+
+    public UserInfo(Integer id, String username, String password, String name) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.name = name;
+    }
+
     public UserInfo() {
     }
 

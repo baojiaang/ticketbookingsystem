@@ -15,7 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -23,15 +22,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "TICKET")
-@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Ticket.findAll", query = "SELECT t FROM Ticket t")
-    , @NamedQuery(name = "Ticket.findById", query = "SELECT t FROM Ticket t WHERE t.id = :id")
-    , @NamedQuery(name = "Ticket.findByShowId", query = "SELECT t FROM Ticket t WHERE t.showId = :showId")
-    , @NamedQuery(name = "Ticket.findByDescription", query = "SELECT t FROM Ticket t WHERE t.description = :description")
-    , @NamedQuery(name = "Ticket.findByPrice", query = "SELECT t FROM Ticket t WHERE t.price = :price")
-    , @NamedQuery(name = "Ticket.findByReminder", query = "SELECT t FROM Ticket t WHERE t.reminder = :reminder")
-    , @NamedQuery(name = "Ticket.findByAmout", query = "SELECT t FROM Ticket t WHERE t.amout = :amout")})
+    @NamedQuery(name = "Ticket.findAll", query = "SELECT t FROM Ticket t")})
 public class Ticket implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -47,11 +39,17 @@ public class Ticket implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "PRICE")
     private Double price;
-    @Column(name = "REMINDER")
-    private Integer reminder;
-    @Column(name = "AMOUT")
-    private Integer amout;
+    @Column(name = "RANK")
+    private Short rank;
 
+    public Ticket(Integer id, Integer showId, String description, Double price, Short rank) {
+        this.id = id;
+        this.showId = showId;
+        this.description = description;
+        this.price = price;
+        this.rank = rank;
+    }
+    
     public Ticket() {
     }
 
@@ -91,20 +89,12 @@ public class Ticket implements Serializable {
         this.price = price;
     }
 
-    public Integer getReminder() {
-        return reminder;
+    public Short getRank() {
+        return rank;
     }
 
-    public void setReminder(Integer reminder) {
-        this.reminder = reminder;
-    }
-
-    public Integer getAmout() {
-        return amout;
-    }
-
-    public void setAmout(Integer amout) {
-        this.amout = amout;
+    public void setRank(Short rank) {
+        this.rank = rank;
     }
 
     @Override
@@ -129,7 +119,7 @@ public class Ticket implements Serializable {
 
     @Override
     public String toString() {
-        return "ticketbooking.model.Ticket[ id=" + id + " ]";
+        return "ticketbooking.entity.Ticket[ id=" + id + " ]";
     }
     
 }

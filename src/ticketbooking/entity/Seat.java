@@ -15,7 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -23,15 +22,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "SEAT")
-@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Seat.findAll", query = "SELECT s FROM Seat s")
-    , @NamedQuery(name = "Seat.findById", query = "SELECT s FROM Seat s WHERE s.id = :id")
-    , @NamedQuery(name = "Seat.findByShowId", query = "SELECT s FROM Seat s WHERE s.showId = :showId")
-    , @NamedQuery(name = "Seat.findBySeatNumber", query = "SELECT s FROM Seat s WHERE s.seatNumber = :seatNumber")
-    , @NamedQuery(name = "Seat.findByPrice", query = "SELECT s FROM Seat s WHERE s.price = :price")
-    , @NamedQuery(name = "Seat.findByTicketId", query = "SELECT s FROM Seat s WHERE s.ticketId = :ticketId")
-    , @NamedQuery(name = "Seat.findByOrdered", query = "SELECT s FROM Seat s WHERE s.ordered = :ordered")})
+    @NamedQuery(name = "Seat.findAll", query = "SELECT s FROM Seat s")})
 public class Seat implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -42,15 +34,41 @@ public class Seat implements Serializable {
     private Integer id;
     @Column(name = "SHOW_ID")
     private Integer showId;
-    @Column(name = "SEAT_NUMBER")
-    private String seatNumber;
+    @Column(name = "SEAT_ROW_NUMBER")
+    private Integer seatRowNumber;
+    @Column(name = "SEAT_COLUMN_NUMBER")
+    private Integer seatColumnNumber;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "PRICE")
     private Double price;
     @Column(name = "TICKET_ID")
     private Integer ticketId;
-    @Column(name = "ORDERED")
-    private Boolean ordered;
+    @Column(name = "STATUS")
+    private Short status;
+    @Column(name = "RANK")
+    private Short rank;
+
+    public Seat(Integer id, Integer showId, Integer seatRowNumber, Integer seatColumnNumber, Double price, Integer ticketId, Short status, Short rank) {
+        this.id = id;
+        this.showId = showId;
+        this.seatRowNumber = seatRowNumber;
+        this.seatColumnNumber = seatColumnNumber;
+        this.price = price;
+        this.ticketId = ticketId;
+        this.status = status;
+        this.rank = rank;
+    }
+
+    public Seat(Integer showId, Integer seatRowNumber, Integer seatColumnNumber, Double price, Integer ticketId, Short status, Short rank) {
+  
+        this.showId = showId;
+        this.seatRowNumber = seatRowNumber;
+        this.seatColumnNumber = seatColumnNumber;
+        this.price = price;
+        this.ticketId = ticketId;
+        this.status = status;
+        this.rank = rank;
+    }
 
     public Seat() {
     }
@@ -75,12 +93,20 @@ public class Seat implements Serializable {
         this.showId = showId;
     }
 
-    public String getSeatNumber() {
-        return seatNumber;
+    public Integer getSeatRowNumber() {
+        return seatRowNumber;
     }
 
-    public void setSeatNumber(String seatNumber) {
-        this.seatNumber = seatNumber;
+    public void setSeatRowNumber(Integer seatRowNumber) {
+        this.seatRowNumber = seatRowNumber;
+    }
+
+    public Integer getSeatColumnNumber() {
+        return seatColumnNumber;
+    }
+
+    public void setSeatColumnNumber(Integer seatColumnNumber) {
+        this.seatColumnNumber = seatColumnNumber;
     }
 
     public Double getPrice() {
@@ -99,12 +125,20 @@ public class Seat implements Serializable {
         this.ticketId = ticketId;
     }
 
-    public Boolean getOrdered() {
-        return ordered;
+    public Short getStatus() {
+        return status;
     }
 
-    public void setOrdered(Boolean ordered) {
-        this.ordered = ordered;
+    public void setStatus(Short status) {
+        this.status = status;
+    }
+
+    public Short getRank() {
+        return rank;
+    }
+
+    public void setRank(Short rank) {
+        this.rank = rank;
     }
 
     @Override
@@ -129,7 +163,7 @@ public class Seat implements Serializable {
 
     @Override
     public String toString() {
-        return "ticketbooking.model.Seat[ id=" + id + " ]";
+        return "ticketbooking.entity.Seat[ id=" + id + " ]";
     }
     
 }

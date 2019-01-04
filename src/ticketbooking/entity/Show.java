@@ -18,7 +18,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -26,15 +25,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "SHOW")
-@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Show.findAll", query = "SELECT s FROM Show s")
-    , @NamedQuery(name = "Show.findById", query = "SELECT s FROM Show s WHERE s.id = :id")
-    , @NamedQuery(name = "Show.findByName", query = "SELECT s FROM Show s WHERE s.name = :name")
-    , @NamedQuery(name = "Show.findByLocation", query = "SELECT s FROM Show s WHERE s.location = :location")
-    , @NamedQuery(name = "Show.findByDescription", query = "SELECT s FROM Show s WHERE s.description = :description")
-    , @NamedQuery(name = "Show.findByShowTime", query = "SELECT s FROM Show s WHERE s.showTime = :showTime")
-    , @NamedQuery(name = "Show.findByPicPath", query = "SELECT s FROM Show s WHERE s.picPath = :picPath")})
+    @NamedQuery(name = "Show.findAll", query = "SELECT s FROM Show s")})
 public class Show implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -49,11 +41,23 @@ public class Show implements Serializable {
     private String location;
     @Column(name = "DESCRIPTION")
     private String description;
+    @Column(name = "PIC_PATH")
+    private String picPath;
     @Column(name = "SHOW_TIME")
     @Temporal(TemporalType.DATE)
     private Date showTime;
-    @Column(name = "PIC_PATH")
-    private String picPath;
+    @Column(name = "DETAIL")
+    private String detail;
+
+    public Show(Integer id, String name, String location, String description, String picPath, Date showTime, String detail) {
+        this.id = id;
+        this.name = name;
+        this.location = location;
+        this.description = description;
+        this.picPath = picPath;
+        this.showTime = showTime;
+        this.detail = detail;
+    }
 
     public Show() {
     }
@@ -94,6 +98,14 @@ public class Show implements Serializable {
         this.description = description;
     }
 
+    public String getPicPath() {
+        return picPath;
+    }
+
+    public void setPicPath(String picPath) {
+        this.picPath = picPath;
+    }
+
     public Date getShowTime() {
         return showTime;
     }
@@ -102,12 +114,12 @@ public class Show implements Serializable {
         this.showTime = showTime;
     }
 
-    public String getPicPath() {
-        return picPath;
+    public String getDetail() {
+        return detail;
     }
 
-    public void setPicPath(String picPath) {
-        this.picPath = picPath;
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 
     @Override

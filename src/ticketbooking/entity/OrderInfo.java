@@ -18,7 +18,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -26,18 +25,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "ORDER_INFO")
-@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "OrderInfo.findAll", query = "SELECT o FROM OrderInfo o")
-    , @NamedQuery(name = "OrderInfo.findById", query = "SELECT o FROM OrderInfo o WHERE o.id = :id")
-    , @NamedQuery(name = "OrderInfo.findByUserId", query = "SELECT o FROM OrderInfo o WHERE o.userId = :userId")
-    , @NamedQuery(name = "OrderInfo.findByAmount", query = "SELECT o FROM OrderInfo o WHERE o.amount = :amount")
-    , @NamedQuery(name = "OrderInfo.findByPrice", query = "SELECT o FROM OrderInfo o WHERE o.price = :price")
-    , @NamedQuery(name = "OrderInfo.findByOrderDate", query = "SELECT o FROM OrderInfo o WHERE o.orderDate = :orderDate")
-    , @NamedQuery(name = "OrderInfo.findByTicketId", query = "SELECT o FROM OrderInfo o WHERE o.ticketId = :ticketId")
-    , @NamedQuery(name = "OrderInfo.findByShowId", query = "SELECT o FROM OrderInfo o WHERE o.showId = :showId")
-    , @NamedQuery(name = "OrderInfo.findBySeatId", query = "SELECT o FROM OrderInfo o WHERE o.seatId = :seatId")
-    , @NamedQuery(name = "OrderInfo.findByOrderTime", query = "SELECT o FROM OrderInfo o WHERE o.orderTime = :orderTime")})
+    @NamedQuery(name = "OrderInfo.findAll", query = "SELECT o FROM OrderInfo o")})
 public class OrderInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -46,26 +35,35 @@ public class OrderInfo implements Serializable {
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
+    @Column(name = "TICKET_ID")
+    private Integer ticketId;
     @Column(name = "USER_ID")
     private Integer userId;
-    @Column(name = "AMOUNT")
-    private Integer amount;
+    @Column(name = "SEAT_ID")
+    private Integer seatId;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "PRICE")
     private Double price;
     @Column(name = "ORDER_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date orderDate;
-    @Column(name = "TICKET_ID")
-    private Integer ticketId;
-    @Column(name = "SHOW_ID")
-    private Integer showId;
-    @Column(name = "SEAT_ID")
-    private Integer seatId;
-    @Column(name = "ORDER_TIME")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date orderTime;
+    @Column(name = "STATUS")
+    private Short status;
+    @Column(name = "ORDER_NUMBER")
+    private String orderNumber;
 
+    public OrderInfo(Integer id, Integer ticketId, Integer userId, Integer seatId, Double price, Date orderDate, Short status, String orderNumber) {
+        this.id = id;
+        this.ticketId = ticketId;
+        this.userId = userId;
+        this.seatId = seatId;
+        this.price = price;
+        this.orderDate = orderDate;
+        this.status = status;
+        this.orderNumber = orderNumber;
+    }
+
+    
     public OrderInfo() {
     }
 
@@ -81,6 +79,14 @@ public class OrderInfo implements Serializable {
         this.id = id;
     }
 
+    public Integer getTicketId() {
+        return ticketId;
+    }
+
+    public void setTicketId(Integer ticketId) {
+        this.ticketId = ticketId;
+    }
+
     public Integer getUserId() {
         return userId;
     }
@@ -89,12 +95,12 @@ public class OrderInfo implements Serializable {
         this.userId = userId;
     }
 
-    public Integer getAmount() {
-        return amount;
+    public Integer getSeatId() {
+        return seatId;
     }
 
-    public void setAmount(Integer amount) {
-        this.amount = amount;
+    public void setSeatId(Integer seatId) {
+        this.seatId = seatId;
     }
 
     public Double getPrice() {
@@ -113,36 +119,20 @@ public class OrderInfo implements Serializable {
         this.orderDate = orderDate;
     }
 
-    public Integer getTicketId() {
-        return ticketId;
+    public Short getStatus() {
+        return status;
     }
 
-    public void setTicketId(Integer ticketId) {
-        this.ticketId = ticketId;
+    public void setStatus(Short status) {
+        this.status = status;
     }
 
-    public Integer getShowId() {
-        return showId;
+    public String getOrderNumber() {
+        return orderNumber;
     }
 
-    public void setShowId(Integer showId) {
-        this.showId = showId;
-    }
-
-    public Integer getSeatId() {
-        return seatId;
-    }
-
-    public void setSeatId(Integer seatId) {
-        this.seatId = seatId;
-    }
-
-    public Date getOrderTime() {
-        return orderTime;
-    }
-
-    public void setOrderTime(Date orderTime) {
-        this.orderTime = orderTime;
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
     }
 
     @Override
