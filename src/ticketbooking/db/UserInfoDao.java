@@ -56,4 +56,51 @@ public class UserInfoDao {
         }
         return user;
     }
+        public UserInfo getByID(int id) {
+        String name="";
+        UserInfo user=null;
+        String sql="select * from user_info where id=? ";
+        PreparedStatement preparedStatement=null;
+        ResultSet rs=null;
+        String username ="";
+        String password ="";
+       try {
+            Connection connection=new Dbutil().getConnection();
+            preparedStatement=connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);  
+            rs=preparedStatement.executeQuery();
+            while(rs.next()){
+  
+                username=rs.getString("username");
+                password=rs.getString("password");
+                name=rs.getString("name");
+            }    
+                user=new UserInfo(Integer.valueOf(id),username,password,name);
+            
+        } catch (SQLException ex) {
+           
+        }
+        return user;
+    }
+      public int changePassword(UserInfo user) throws SQLException{
+        Connection conn=Dbutil.getConnection();
+        String sql="update user_info set password =? where id =?";
+        PreparedStatement pstmt=conn.prepareStatement(sql);
+        pstmt.setString(1, user.getPassword());
+        pstmt.setInt(2, user.getId());
+        int result= pstmt.executeUpdate();
+        return result;
+      }
+      public boolean checkUsername(String userName) throws SQLException{
+        boolean exist=false;
+        Connection conn=Dbutil.getConnection();
+        String sql="select id from user_info where username=?";
+        PreparedStatement pstmt=conn.prepareStatement(sql);
+        pstmt.setString(1, userName);
+        ResultSet rs=pstmt.executeQuery();
+        if(rs.next()){
+            exist=true;
+        }
+            return exist;
+      }
 }

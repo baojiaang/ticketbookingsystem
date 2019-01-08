@@ -7,6 +7,7 @@
     <class>ticketbooking.entity.OrderInfo</class>
     <class>ticketbooking.entity.Ticket</class>
     <class>ticketbooking.entity.UserInfo</class>
+    <class>ticketbooking.entity.Admin</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:derby://localhost:1527/ticketdb"/>
       <property name="javax.persistence.jdbc.user" value="baojiaang"/>

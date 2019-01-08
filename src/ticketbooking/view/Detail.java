@@ -18,10 +18,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JRadioButton;
 import javax.swing.UIManager;
 import sun.awt.image.PixelConverter;
+import ticketbooking.db.TicketDao;
+import ticketbooking.entity.Admin;
 import ticketbooking.entity.Show;
 import ticketbooking.entity.Ticket;
 import ticketbooking.entity.UserInfo;
-import ticketbooking.service.TicketJpaController;
 
 
 /**
@@ -29,23 +30,34 @@ import ticketbooking.service.TicketJpaController;
  * @author baojiaang
  */
 public class Detail extends javax.swing.JFrame {
-     EntityManagerFactory factory = Persistence.createEntityManagerFactory("TicketBookingSystemPU");
-     TicketJpaController tjc=new TicketJpaController(factory);
-     private UserInfo u;
-
+   
+    
+    private UserInfo u;
+    private Admin admin;
+    private Show show;
+     List<Ticket> tickets;
     /**
      * Creates new form Detail
      */
-    public Detail(Show show,UserInfo u) {
+    public Detail(Show show,UserInfo u) throws SQLException {
         this.u=u;
         this.show=show;
         initComponents();
         initdata(show);
         this.setVisible(true);
     }
-    public void initdata(Show show){
+        public Detail(Show show,Admin admin) throws SQLException {
+        this.admin=admin;
+        this.show=show;
+        initComponents();
+        initdata(show);
+        buy.setText("sells information");
+        this.setVisible(true);
+    }
+    public void initdata(Show show) throws SQLException{
         Integer show_ID=show.getId();
-        this.tickets=tjc.findTicketsByShowId(show_ID);
+        TicketDao td=new TicketDao();
+        this.tickets=td.getTicketsByShowId(show.getId());
         show_name.setText(show.getName());
         location.setText(show.getLocation());
         ImageIcon icon=new ImageIcon(show.getPicPath());
@@ -53,13 +65,12 @@ public class Detail extends javax.swing.JFrame {
         pic.setIcon(icon);
         pic.setSize(335, 313);
         describe.setText(show.getDescription());
+        describe.setEditable(false);
         show_time.setText(show.getShowTime().toString());
         vip.setText(tickets.get(0).getDescription()+"     :"+tickets.get(0).getPrice().toString());
         first.setText(tickets.get(1).getDescription()+"     :"+tickets.get(1).getPrice().toString());
         second.setText(tickets.get(2).getDescription()+"     :"+tickets.get(2).getPrice().toString());
-        bg.add(vip);
-        bg.add(first);
-        bg.add(second);
+
         
     }    
     /**
@@ -83,9 +94,9 @@ public class Detail extends javax.swing.JFrame {
         jLabel14 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         describe = new javax.swing.JEditorPane();
-        vip = new javax.swing.JRadioButton();
-        first = new javax.swing.JRadioButton();
-        second = new javax.swing.JRadioButton();
+        vip = new javax.swing.JLabel();
+        first = new javax.swing.JLabel();
+        second = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -116,21 +127,11 @@ public class Detail extends javax.swing.JFrame {
 
         jScrollPane1.setViewportView(describe);
 
-        vip.setText("jRadioButton1");
-        vip.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                vipActionPerformed(evt);
-            }
-        });
+        vip.setText("jLabel1");
 
-        first.setText("jRadioButton2");
-        first.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                firstActionPerformed(evt);
-            }
-        });
+        first.setText("jLabel1");
 
-        second.setText("jRadioButton3");
+        second.setText("second");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -154,18 +155,13 @@ public class Detail extends javax.swing.JFrame {
                                         .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
                                         .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(35, 35, 35)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(35, 35, 35)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(show_time, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(location, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(vip)
-                                            .addComponent(first)
-                                            .addComponent(second)))))
+                                    .addComponent(show_time, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(location, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(vip)
+                                    .addComponent(first)
+                                    .addComponent(second)))
                             .addComponent(buy, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -187,18 +183,15 @@ public class Detail extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(location, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(41, 41, 41)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(41, 41, 41)
-                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(vip)
-                                .addGap(21, 21, 21)
-                                .addComponent(first)))
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(vip))
+                        .addGap(11, 11, 11)
+                        .addComponent(first)
                         .addGap(18, 18, 18)
                         .addComponent(second)
-                        .addGap(25, 25, 25)
+                        .addGap(14, 14, 14)
                         .addComponent(buy, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -214,7 +207,7 @@ public class Detail extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 800, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 939, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -224,44 +217,36 @@ public class Detail extends javax.swing.JFrame {
         setBounds(0, 0, 816, 639);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void firstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_firstActionPerformed
-
     private void buyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buyActionPerformed
         // TODO add your handling code here:
-      if(vip.isSelected()){
-          System.out.println("购买vip票");
-      }
-      else if(first.isSelected()){
-          System.out.println("购买内场一等票");
-      }
-      else{
-           System.out.println("购买外场二等票");
-      }
+//      if(vip.isSelected()){
+//          System.out.println("购买vip票");
+//      }
+//      else if(first.isSelected()){
+//          System.out.println("购买内场一等票");
+//      }
+//      else{
+//           System.out.println("购买外场二等票");
+//      }
       this.dispose();
          try {
              System.out.println(show.getId());
-             SelectSeat selectSeat=new SelectSeat(show.getId(),u);
+             if(this.u!=null){
+                new SelectSeat(show.getId(),u);
+             }
+             else if(this.admin!=null){
+                 new SelectSeat(show.getId(), admin);
+             }
          } catch (SQLException ex) {
              Logger.getLogger(Detail.class.getName()).log(Level.SEVERE, null, ex);
          }
         
     }//GEN-LAST:event_buyActionPerformed
 
-    private void vipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vipActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_vipActionPerformed
-
-  
-
-    private Show show;
-    private  ButtonGroup bg=new ButtonGroup();
-     List<Ticket> tickets;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buy;
     private javax.swing.JEditorPane describe;
-    private javax.swing.JRadioButton first;
+    private javax.swing.JLabel first;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel6;
@@ -270,9 +255,9 @@ public class Detail extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel location;
     private javax.swing.JLabel pic;
-    private javax.swing.JRadioButton second;
+    private javax.swing.JLabel second;
     private javax.swing.JLabel show_name;
     private javax.swing.JLabel show_time;
-    private javax.swing.JRadioButton vip;
+    private javax.swing.JLabel vip;
     // End of variables declaration//GEN-END:variables
 }

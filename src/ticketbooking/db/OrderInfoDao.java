@@ -70,7 +70,26 @@ public class OrderInfoDao {
         }
         return orders;
     }
-    
+     public ArrayList<OrderInfo> getOrders() throws SQLException{
+        ArrayList<OrderInfo> orders=new ArrayList<>();
+        Connection con=Dbutil.getConnection();
+        String sql="select * from order_info ";
+        PreparedStatement pstmt=con.prepareStatement(sql);
+        ResultSet rs=pstmt.executeQuery();
+        while(rs.next()){
+            int id=rs.getInt("id");
+            int ticket_id=rs.getInt("ticket_id");
+            int user_id=rs.getInt("user_id");
+            int seat_id=rs.getInt("seat_id");
+            double price=rs.getDouble("price");
+            short status=rs.getShort("status");
+            Date order_date=rs.getDate("order_date");
+            String order_number =rs.getString("order_number");
+            OrderInfo oi=new OrderInfo(id, ticket_id, user_id, seat_id, price, order_date, status, order_number);
+            orders.add(oi);
+        }
+        return orders;
+    }
     public int changeStatus(Integer id) throws SQLException{
         Connection con=Dbutil.getConnection();
         String sql="update order_info set status =0  where id =?";

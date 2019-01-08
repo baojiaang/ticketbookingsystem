@@ -49,6 +49,14 @@ public class Ticket implements Serializable {
         this.price = price;
         this.rank = rank;
     }
+
+    public Ticket(Integer showId, String description, Double price, Short rank) {
+        this.showId = showId;
+        this.description = description;
+        this.price = price;
+        this.rank = rank;
+    }
+    
     
     public Ticket() {
     }

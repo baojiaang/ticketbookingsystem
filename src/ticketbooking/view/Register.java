@@ -23,6 +23,15 @@ public class Register extends javax.swing.JFrame {
         initComponents();
         this.setVisible(true);
     }
+    public boolean checkExist() throws SQLException{
+        String input_name =username.getText();
+        boolean status=new UserInfoDao().checkUsername(input_name);
+        if(true)
+        {  
+            JOptionPane.showMessageDialog(null, "this username has been used!", "INFORMATION_MESSAGE",JOptionPane.INFORMATION_MESSAGE);
+        }
+         return status;
+    }
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -42,6 +51,7 @@ public class Register extends javax.swing.JFrame {
         nickname = new javax.swing.JTextField();
         register_button = new javax.swing.JButton();
         back_button = new javax.swing.JButton();
+        check_button = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -74,6 +84,13 @@ public class Register extends javax.swing.JFrame {
             }
         });
 
+        check_button.setText("check exist");
+        check_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                check_buttonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -94,11 +111,13 @@ public class Register extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(username)
                             .addComponent(password)
-                            .addComponent(nickname, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)))
+                            .addComponent(nickname, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE))
+                        .addGap(61, 61, 61)
+                        .addComponent(check_button))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(back_button)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(317, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -108,7 +127,8 @@ public class Register extends javax.swing.JFrame {
                 .addGap(92, 92, 92)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(check_button))
                 .addGap(33, 33, 33)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -157,6 +177,9 @@ public class Register extends javax.swing.JFrame {
         String input_nickname=nickname.getText();
         if(input_username!=null&&input_password!=null&&input_nickname!=null){
             try {
+                if(checkExist()){
+                    return;
+                }           
                 new UserInfoDao().register(input_username, input_password, input_nickname);
                 Object[] options ={ "back to login", "register again" };  //自定义按钮上的文字
                 int m = JOptionPane.showOptionDialog(null, "register success", "Thanks",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
@@ -172,6 +195,15 @@ public class Register extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_register_buttonActionPerformed
+
+    private void check_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_check_buttonActionPerformed
+        try {
+            // TODO add your handling code here:
+            checkExist();
+        } catch (SQLException ex) {
+            Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_check_buttonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -210,6 +242,7 @@ public class Register extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton back_button;
+    private javax.swing.JButton check_button;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

@@ -56,6 +56,7 @@
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="showListButton" pref="168" max="32767" attributes="0"/>
                               <Component id="orderListButton" max="32767" attributes="0"/>
+                              <Component id="change_button" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -79,7 +80,9 @@
                   <Component id="showListButton" min="-2" pref="50" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                   <Component id="orderListButton" min="-2" pref="49" max="-2" attributes="0"/>
-                  <EmptySpace pref="202" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+                  <Component id="change_button" min="-2" pref="38" max="-2" attributes="0"/>
+                  <EmptySpace pref="129" max="32767" attributes="0"/>
                   <Component id="exitButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="107" max="-2" attributes="0"/>
               </Group>
@@ -119,6 +122,14 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="exitButtonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="change_button">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="change password"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="change_buttonActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

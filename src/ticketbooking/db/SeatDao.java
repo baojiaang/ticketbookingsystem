@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import ticketbooking.entity.Seat;
@@ -22,6 +23,27 @@ public class SeatDao {
         List<Seat> seats=new ArrayList<Seat>();
         Connection con=Dbutil.getConnection();
         String sql="select * from seat where show_id=?";
+        PreparedStatement pstmt=con.prepareStatement(sql);
+        pstmt.setInt(1, show_id);
+        ResultSet rs=pstmt.executeQuery();
+        while(rs.next()){
+            int id=rs.getInt("id");
+            int seat_row_number=rs.getInt("seat_row_number");
+            int seat_column_number=rs.getInt("seat_column_number");
+            Double price=rs.getDouble("price");
+            int ticket_id=rs.getInt("ticket_id");
+            short status=rs.getShort("status");
+            short rank=rs.getShort("rank");
+            Seat seat=new Seat(id,show_id,seat_row_number,seat_column_number,price,ticket_id,status,rank);
+            seats.add(seat);
+        }
+        con.close();
+        return seats;
+    }
+        public List<Seat> getOrderedSeatsList(Integer show_id) throws SQLException{
+        List<Seat> seats=new ArrayList<Seat>();
+        Connection con=Dbutil.getConnection();
+        String sql="select * from seat where show_id=? and status =1";
         PreparedStatement pstmt=con.prepareStatement(sql);
         pstmt.setInt(1, show_id);
         ResultSet rs=pstmt.executeQuery();

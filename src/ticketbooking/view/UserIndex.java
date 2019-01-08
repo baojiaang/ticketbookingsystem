@@ -19,12 +19,12 @@ import ticketbooking.entity.UserInfo;
  *
  * @author baojiaang
  */
-public class Index extends javax.swing.JFrame {
+public class UserIndex extends javax.swing.JFrame {
    
     /**
      * Creates new form index
      */
-    public Index(UserInfo u) {
+    public UserIndex(UserInfo u) {
         this.u=u;
       //  System.out.println(u.getId());
         initComponents();
@@ -62,6 +62,7 @@ public class Index extends javax.swing.JFrame {
         showListButton = new javax.swing.JButton();
         orderListButton = new javax.swing.JButton();
         exitButton = new javax.swing.JButton();
+        change_button = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -90,6 +91,13 @@ public class Index extends javax.swing.JFrame {
             }
         });
 
+        change_button.setText("change password");
+        change_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                change_buttonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -105,7 +113,8 @@ public class Index extends javax.swing.JFrame {
                         .addGap(308, 308, 308)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(showListButton, javax.swing.GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
-                            .addComponent(orderListButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(orderListButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(change_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(324, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
@@ -123,7 +132,9 @@ public class Index extends javax.swing.JFrame {
                 .addComponent(showListButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26)
                 .addComponent(orderListButton, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 202, Short.MAX_VALUE)
+                .addGap(35, 35, 35)
+                .addComponent(change_button, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 129, Short.MAX_VALUE)
                 .addComponent(exitButton)
                 .addGap(107, 107, 107))
         );
@@ -148,12 +159,14 @@ public class Index extends javax.swing.JFrame {
         try {
             new OrderListUI(u);
         } catch (SQLException ex) {
-            Logger.getLogger(Index.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UserIndex.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_orderListButtonActionPerformed
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
         // TODO add your handling code here:
+        this.dispose();
+        new Login();
     }//GEN-LAST:event_exitButtonActionPerformed
 
     private void showListButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showListButtonActionPerformed
@@ -163,14 +176,19 @@ public class Index extends javax.swing.JFrame {
             try {
                 new ShowList(u);
             } catch (FileNotFoundException ex) {
-                Logger.getLogger(Index.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(UserIndex.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
-                Logger.getLogger(Index.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(UserIndex.class.getName()).log(Level.SEVERE, null, ex);
             }
         } catch (IOException ex) {
-            Logger.getLogger(Index.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UserIndex.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_showListButtonActionPerformed
+
+    private void change_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_change_buttonActionPerformed
+        // TODO add your handling code here:
+        new ChangePassword(u);
+    }//GEN-LAST:event_change_buttonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -178,6 +196,7 @@ public class Index extends javax.swing.JFrame {
   
     private UserInfo u;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton change_button;
     private javax.swing.JButton exitButton;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JButton orderListButton;

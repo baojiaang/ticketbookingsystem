@@ -48,8 +48,12 @@ public class Show implements Serializable {
     private Date showTime;
     @Column(name = "DETAIL")
     private String detail;
+    @Column(name = "ROW")
+    private Integer row;
+    @Column(name = "COL")
+    private Integer col;
 
-    public Show(Integer id, String name, String location, String description, String picPath, Date showTime, String detail) {
+    public Show(Integer id, String name, String location, String description, String picPath, Date showTime, String detail, Integer row, Integer col) {
         this.id = id;
         this.name = name;
         this.location = location;
@@ -57,8 +61,22 @@ public class Show implements Serializable {
         this.picPath = picPath;
         this.showTime = showTime;
         this.detail = detail;
+        this.row = row;
+        this.col = col;
     }
 
+    public Show(String name, String location, String description, String picPath, Date showTime, String detail, Integer row, Integer col) {
+        this.name = name;
+        this.location = location;
+        this.description = description;
+        this.picPath = picPath;
+        this.showTime = showTime;
+        this.detail = detail;
+        this.row = row;
+        this.col = col;
+    }
+
+    
     public Show() {
     }
 
@@ -120,6 +138,22 @@ public class Show implements Serializable {
 
     public void setDetail(String detail) {
         this.detail = detail;
+    }
+
+    public Integer getRow() {
+        return row;
+    }
+
+    public void setRow(Integer row) {
+        this.row = row;
+    }
+
+    public Integer getCol() {
+        return col;
+    }
+
+    public void setCol(Integer col) {
+        this.col = col;
     }
 
     @Override

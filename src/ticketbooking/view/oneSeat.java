@@ -139,10 +139,10 @@ public class oneSeat {
         this.col=seat.getSeatColumnNumber();
         this.status=seat.getStatus();
         this.seat_id=seat.getId();
-        infoJLabel=new JLabel("row\n "+seat.getSeatRowNumber()+"column\n "+seat.getSeatColumnNumber()+"price\n "+seat.getPrice());
+        infoJLabel=new JLabel("row : "+seat.getSeatRowNumber()+" column : "+seat.getSeatColumnNumber()+"  price:  "+seat.getPrice());
   
     }
-    public JButton init(Seat seat,JPanel selectedJPanel,ArrayList<Seat> seats){
+    public JButton init(Seat seat,JPanel selectedJPanel,ArrayList<Seat> seats,boolean can_select){
         if(seat.getStatus()==0){ //正常
             if(seat.getRank()==1){
             this.seatButton.setIcon(vipseat);
@@ -155,7 +155,10 @@ public class oneSeat {
         else if(seat.getStatus()==1){
             this.seatButton.setIcon(choosed); // 被买了
         }
-        
+        else if(seat.getStatus()==-1){
+            this.seatButton.setIcon(seatWhite);//未设置票价
+        }
+        if(can_select==true){
         seatButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -164,6 +167,7 @@ public class oneSeat {
                    setStatus(2);
                   selectedJPanel.add(infoJLabel);
                   seats.add(seat);
+                  selectedJPanel.updateUI();
                    
                }else if(getStatus()==2){
                   if(seat.getRank()==1)
@@ -175,10 +179,12 @@ public class oneSeat {
                   selectedJPanel.remove(infoJLabel);
                    setStatus(0);
                    seats.remove(seat);
+                   selectedJPanel.updateUI();
                }
                          
             }
         });
+    }
         return seatButton;
     }
     

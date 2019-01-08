@@ -24,9 +24,11 @@ import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
 import ticketbooking.db.OrderInfoDao;
 import ticketbooking.db.SeatDao;
+import ticketbooking.db.ShowDao;
 import ticketbooking.db.TicketDao;
 import ticketbooking.entity.OrderInfo;
 import ticketbooking.entity.Seat;
+import ticketbooking.entity.Show;
 import ticketbooking.entity.Ticket;
 import ticketbooking.entity.UserInfo;
 
@@ -48,6 +50,11 @@ public class OrderListUI {
         init();
         jf.pack();
         jf.setVisible(true);
+        initNavPanel();
+         jsp.setHorizontalScrollBarPolicy(       
+                JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        jsp.setVerticalScrollBarPolicy(   
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
     }
     
     public void init() throws SQLException{
@@ -73,11 +80,17 @@ public class OrderListUI {
         Date buy_date=null;
          rowData=new Object[orderInfos.size()][5];
          int orderStatus=0;
+         String showName =null;
         for(int j=0;j<orderInfos.size();j++){
             OrderInfo oi=orderInfos.get(j);
+       
             int ticketID=oi.getTicketId();
             int orderID=oi.getId();
             Ticket ticket=new TicketDao().getTicketByID(ticketID);
+            System.out.println(ticket.getShowId());
+            Show show =new ShowDao().getShowByID(ticket.getShowId()); 
+            
+            showName=show.getName();
             String ticket_class=ticket.getDescription();
             double price=oi.getPrice();
             int seatID= oi.getSeatId();
@@ -94,7 +107,7 @@ public class OrderListUI {
             order_num= oi.getOrderNumber();
             orderStatus=oi.getStatus();
         }
-          JLabel info=new JLabel("username     "+username+"order nuber     "+order_num+"buy date    "+buy_date);
+          JLabel info=new JLabel("show name    "+ showName+"   order nuber     "+order_num+"     buy date    "+buy_date);
         JTable orderJTable=new JTable(rowData, columnNames);
             JScrollPane scr=new JScrollPane(orderJTable);
             infoPanel.add(info);
@@ -117,6 +130,21 @@ public class OrderListUI {
         else if(status==0)
             return "cancled";
         return "cancled";
+    }
+    public void initNavPanel(){
+        JPanel navPanel=new JPanel();
+        JButton backButton=new JButton("back");
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               jf.dispose();
+               new UserIndex(u);
+            }
+        });
+        JLabel label=new JLabel("Your Order List");
+        navPanel.add(backButton);
+        navPanel.add(label);
+        jf.add(navPanel,BorderLayout.NORTH);
     }
 }
 class CanelActionListener implements ActionListener{

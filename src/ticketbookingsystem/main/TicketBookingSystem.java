@@ -5,6 +5,8 @@
  */
 package ticketbookingsystem.main;
 
+import ticketbooking.view.Login;
+
 /**
  *
  * @author baojiaang
@@ -16,6 +18,7 @@ public class TicketBookingSystem {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        new Login();
     }
     
 }

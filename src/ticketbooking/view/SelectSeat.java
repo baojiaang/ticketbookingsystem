@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BoxLayout;
@@ -27,13 +28,18 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 import ticketbooking.db.OrderInfoDao;
 import ticketbooking.db.SeatDao;
+import ticketbooking.db.ShowDao;
+import ticketbooking.entity.Admin;
 import ticketbooking.entity.Seat;
+import ticketbooking.entity.Show;
 import ticketbooking.entity.UserInfo;
 import util.IDUtils;
 
@@ -45,7 +51,6 @@ public class SelectSeat {
     private JFrame mainJFrame;
     private JPanel jf;
     private JPanel seat_panel;
-   // private JTable seat;
     private JPanel stageJPanel;
     private JLabel stageJLabel;
     private JPanel selectPanel;
@@ -59,8 +64,10 @@ public class SelectSeat {
     private ArrayList<Seat> selectedSeats=new ArrayList<>();
     private int showId;
     private UserInfo u;
+    private Admin admin;
     private JButton backButton=new JButton("back");
     private JPanel navJPanel=new JPanel();
+    private Show show;
     public SelectSeat(Integer showId,UserInfo u) throws SQLException{
         this.showId=showId;
         this.u=u;
@@ -68,7 +75,24 @@ public class SelectSeat {
         Container container=mainJFrame.getContentPane();
         mainJFrame.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
         init();
-        navJPanel.add(backButton);
+        initUI();    
+    }
+        public SelectSeat(Integer showId,Admin admin) throws SQLException{
+        this.showId=showId;
+        this.admin=admin;
+        mainJFrame=new JFrame();
+        Container container=mainJFrame.getContentPane();
+        mainJFrame.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+        init();
+        initUI(); 
+        optionJPanel.remove(buyButton);
+        this.slectWord.setText("booked seat");
+        initBookedSeat();
+    }
+    
+    
+    public void initUI(){
+         navJPanel.add(backButton);
         mainJFrame.add(navJPanel);
         mainJFrame.add(jf);
         mainJFrame.setVisible(true);
@@ -77,6 +101,7 @@ public class SelectSeat {
     }
     
     public void init() throws SQLException{
+        this.show=new ShowDao().getShowByID(showId);
         this.jf=new JPanel();
         this.jf.setLayout(new BorderLayout());
   
@@ -89,55 +114,33 @@ public class SelectSeat {
         this.optionJPanel=new JPanel();
         this.selectPanel=new JPanel();
         this.infoJPanel=new JPanel();
-        this.selectPanel=new JPanel();
         infoJPanel.add(infoJLabel);
         this.selectPanel.add(slectWord);
         this.introduction.setImage(this.introduction.getImage().getScaledInstance(100, 400, Image.SCALE_DEFAULT));
+        this.stgaeIcon.setImage(this.stgaeIcon.getImage().getScaledInstance(600, 100, Image.SCALE_DEFAULT));
         this.infoJLabel.setIcon(introduction);
         optionJPanel.add(buyButton);
         //this.table_panel.setLayout(new BorderLayout());
-        this.seat_panel.setLayout(new GridLayout(11,11,5,5));
-        initSeat(10,10);
-       // this.table_panel.add(seat,BorderLayout.CENTER);
-        //this.table_panel.add(seat.getTableHeader(),BorderLayout.NORTH);
-        this.jf.add(seat_panel,BorderLayout.CENTER);
+        this.seat_panel.setLayout(new GridLayout(show.getRow()+1,show.getCol()+1,5,5));
+        JScrollPane jsp=new JScrollPane();
+        jsp.setViewportView(this.seat_panel);
+        initSeat(show.getRow(),show.getCol());
+        this.jf.add(jsp,BorderLayout.CENTER);
         this.jf.add(stageJPanel,BorderLayout.NORTH);
         this.jf.add(optionJPanel,BorderLayout.SOUTH);
         this.jf.add(selectPanel,BorderLayout.EAST);
         this.jf.add(infoJPanel,BorderLayout.WEST);
         BoxLayout layout=new BoxLayout(selectPanel, BoxLayout.Y_AXIS);
         selectPanel.setLayout(layout);
-       
-        
+            
         addBackButtonListener();
         addBuyButtonListener();
     
      
     }
     
-   /* public void initSeat(){
-        Object[] columnData=new Object[11];
-        Object[][] rowData=new Object[10][11];
-        jtb=new JToggleButton[10][10];
-        ArrayList<String> col=new ArrayList<>();
-        columnData[0]=" ";
-        for(int i=1;i<=10;i++){
-           columnData[i]="column "+String.valueOf(i);
-        }
-        //columnData=col.toArray();
-        for(int i=0;i<10;i++){
-            rowData[i][0]="row "+String.valueOf(i+1);
-            for(int j=1;j<=10;j++){
-                rowData[i][j]=jtb[i][j-1];
-            }
-        }
-        seat=new JTable(rowData, columnData);
-    }*/
     public void initSeat(int m,int n) throws SQLException{
-//        for(int i=0;i<100;i++){
-//            JToggleButton jtb=new JToggleButton();
-//            seat_panel.add(jtb);
-//        }
+
         for(int i=0;i<m+1;i++){
             for(int j=0;j<n+1;j++){
                 if(i==0){
@@ -151,14 +154,33 @@ public class SelectSeat {
                 }
                 else{
                     Seat seat=new SeatDao().getSeatByShowIdAndRowAndCol(showId, i, j);
-                    JButton seatButton=new oneSeat(seat).init(seat,selectPanel,selectedSeats);
-                   
+                    boolean can_select=false;
+                    if(admin==null)
+                        can_select=true;
+                    JButton seatButton=new oneSeat(seat).init(seat,selectPanel,selectedSeats,can_select);         
                     seat_panel.add(seatButton);
+//                     if(admin!=null) // admin cannot choose seat
+//                         seatButton.setEnabled(false);
                 }
-                
+                             
             }
         }
-
+    }
+    public void initBookedSeat() throws SQLException{
+        List<Seat> seats=new SeatDao().getOrderedSeatsList(showId);
+        for(int i=0;i<seats.size();i++){
+            Seat seat=seats.get(i);
+            int rank=seat.getRank();
+            String seatClass =null;
+            if(rank==1)
+                seatClass=" vip ";
+            else if(rank==2)
+                seatClass=" first seat ";
+            else
+                seatClass=" second seat ";
+            JLabel booked=new JLabel(" seat class  "+seatClass+" price: "+ seat.getPrice()+" row: "+seat.getSeatRowNumber()+" col: "+seat.getSeatColumnNumber());
+            selectPanel.add(booked);
+        }
     }
     public void addBuyButtonListener(){
         buyButton.addActionListener(new ActionListener() {
@@ -174,12 +196,19 @@ public class SelectSeat {
                        int result=od.createOrder(seat, u,ordernumber,now);
                        int result2=sd.changeStatus(seat.getId());
                        if(result==1&&result2==1){
-                           System.out.println("购买成功");
+                           System.out.println(seat+"booking success");
                        }
                    } catch (SQLException ex) {
                        Logger.getLogger(SelectSeat.class.getName()).log(Level.SEVERE, null, ex);
                    }
                }
+               JOptionPane.showMessageDialog(null, "booking tickets success", "INFORMATION_MESSAGE",JOptionPane.INFORMATION_MESSAGE);
+               mainJFrame.dispose();
+                try {
+                    new OrderListUI(u);
+                } catch (SQLException ex) {
+                    Logger.getLogger(SelectSeat.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
